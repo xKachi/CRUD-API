@@ -3,22 +3,23 @@ import prisma from "../client";
 
 // Creating a user
 export async function createUser(req: Request, res: Response) {
-  const { name, email, phoneNumber, gender } = req.body;
+  try {
 
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-      phoneNumber,
-      gender,
-    },
-  });
+    const user = await prisma.user.create({
+      data: req.body,
+    });
 
-  res.status(201).json({
-    status: true,
-    message: "User Successfully Created",
-    data: user,
-  });
+    res.status(201).json({
+      status: true,
+      message: "User Successfully Created",
+      data: user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: false,
+      message: 'server error'
+    })
+  }
 }
 
 // Get all Users
@@ -77,7 +78,7 @@ export async function deleteUser(req: Request, res: Response) {
   } catch {
     res.status(501).json({
       status: false,
-      message: "Server error",
+      message: "server error",
     });
   }
 }
@@ -87,7 +88,20 @@ export async function updateUser(req: Request, res: Response) {
   try {
     const { userid } = req.params;
 
-    const user = await prisma.user.update({
+    const user = await prisma.user.findFirst({
+      where: {
+        id: userid,
+      },
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        status: false,
+        message: "User not found",
+      });
+    }
+
+    const updatedUser = await prisma.user.update({
       where: {
         id: userid,
       },
@@ -97,12 +111,13 @@ export async function updateUser(req: Request, res: Response) {
     res.json({
       status: true,
       message: "User Successfully updated",
-      data: user,
+      data: updatedUser,
     });
   } catch (error) {
+    console.log(error)
     res.status(500).json({
       status: false,
-      message: "User Successfully updated",
+      message: "server error",
     });
   }
 }

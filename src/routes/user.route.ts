@@ -6,14 +6,16 @@ import {
   getUsers,
   updateUser,
 } from "../controllers/user.controller";
+import { validateSchema } from "../middlewares/validation.middleware";
+import { createUserSchema, updateUserSchema } from "../schemas/user.schema";
 
 // Users layout Route
 const userRoute = Router();
 
-userRoute.post("", createUser);
+userRoute.post("", validateSchema(createUserSchema), createUser);
 userRoute.get("", getUsers);
 userRoute.get("/:userid", getUser);
 userRoute.delete("/:userid", deleteUser);
-userRoute.patch("/:userid", updateUser);
+userRoute.patch("/:userid", validateSchema(updateUserSchema), updateUser);
 
 export default userRoute;
