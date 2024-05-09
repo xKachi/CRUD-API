@@ -5,11 +5,6 @@ export const createUserSchema = z.object({
   email: z.string().email(),
   phoneNumber: z.string().regex(/^\d+$/),
   gender: z.enum(["male", "female", "others"]),
-});
+}).strict(); //strict prevents the schema from validating payloads with properties not in the schema
 
-export const updateUserSchema = z.object({
-  name: z.string().min(1).nullable(),
-  email: z.string().email().nullable(),
-  phoneNumber: z.string().regex(/^\d+$/).nullable(),
-  gender: z.enum(["male", "female", "others"]).nullable(),
-});
+export const updateUserSchema = createUserSchema.partial(); //creates a partial schema from createUserSchema were all properties are optional
