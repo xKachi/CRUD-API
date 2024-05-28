@@ -5,7 +5,7 @@ import userRoute from "./user.route";
 const indexRoute = Router();
 
 indexRoute.get("", async (req, res) => {
-  res.json({ message: "Moneysssssss" });
+  res.json({ message: "Hello  World" });
 });
 
 indexRoute.use("/users", userRoute);
