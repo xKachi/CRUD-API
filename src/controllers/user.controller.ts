@@ -15,6 +15,7 @@ export async function createUser(req: Request, res: Response) {
       data: user,
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       status: false,
       message: 'server error'
